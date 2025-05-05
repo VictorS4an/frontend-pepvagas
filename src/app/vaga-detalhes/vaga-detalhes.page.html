@@ -54,7 +54,7 @@
                   <!-- Logo normal -->
                   <img *ngIf="vaga.ocultarNome !== 'S' && vaga.logo !== 'vaga-logopadrao.svg'" alt="Logo" class="logo" 
                        [src]="isEnvironment ? 'http://vagas.pep2.ifsp.edu.br/api/images/'+vaga.logo : 
-                                             'https://backend-pepvagas-4.onrender.com/images/'+vaga.logo"/> <!-- Estava assim: vaga.logo === 'vaga-logopadrao.svg -->
+                                             'https://backend-pepvagas-1.onrender.com/images/'+vaga.logo"/> <!-- Estava assim: vaga.logo === 'vaga-logopadrao.svg -->
                   
                   <!-- Logo confidencial -->
                   <img *ngIf="vaga.ocultarNome === 'S' || vaga.logo === 'vaga-logopadrao.svg'" alt="Logo Confidencial" class="logo" 
