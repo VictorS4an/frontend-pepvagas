@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    API: "http://vagas.pep2.ifsp.edu.br/api"   
+    API: "https://backend-pepvagas-4.onrender.com"   
   };
   
