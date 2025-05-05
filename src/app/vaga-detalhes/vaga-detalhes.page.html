@@ -1,0 +1,117 @@
+<ion-content [fullscreen]="true">
+  <app-nav></app-nav>
+
+  <div class="web-padding">
+    <div class="container">
+
+      <ion-fab-button class="back-button" color="dark" (click)="goToHome()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-fab-button>
+
+      <ion-card *ngIf="vaga">
+        <img alt="Banner da Vaga" *ngIf="!isEnvironment" class="banner" src="https://backend-pepvagas-4.onrender.com/images/{{vaga.banner}}" />
+        <img alt="Banner da Vaga" *ngIf="isEnvironment" class="banner" src="http://vagas.pep2.ifsp.edu.br/api/images/{{vaga.banner}}" />
+
+        <ion-card-content style="color: var(--ion-color-dark, #000);">
+          <ion-row>
+            <ion-col size="6">
+              <ion-card-header>
+                <ion-card-title> {{ vaga.titulo }} </ion-card-title>
+              </ion-card-header>
+              <div class="labels-container">
+                <ion-label><b>Tipo:</b> {{vaga.tipo}}</ion-label>
+                <ion-label><b>Regime:</b> {{vaga.regime}}</ion-label>
+                <ion-label><b>Salário:</b> {{salario}}</ion-label>
+                <ion-label *ngIf="vaga.modalidade === 'P'"><b>Modalidade:</b> Presencial</ion-label>
+                <ion-label *ngIf="vaga.modalidade === 'H'"><b>Modalidade:</b> Híbrido</ion-label>
+                <ion-label *ngIf="vaga.modalidade === 'R'"><b>Modalidade:</b> Remoto</ion-label>
+                <ion-label><b>Área:</b> {{vaga.idArea?.nome}}</ion-label>
+                <ion-label *ngIf="vaga.pcd"><b>Vaga para PCDs</b></ion-label>
+              </div>
+              <ion-button class="duvida-button" id="vaga">?</ion-button>
+              <ion-popover trigger="vaga" triggerAction="click">
+                <ng-template>
+                  <ion-content class="ion-padding">
+                    <b>Tipos de Vaga:</b> Diurno, Noturno ou Misto;
+                    <br />
+                    <b>Regimes:</b> CLT, PJ ou Estágio;
+                    <br />
+                    <b>Modalidades:</b> Presencial, Híbrido ou Remoto;
+                    <br />
+                    <b>PCDs:</b> Pessoas com deficiência.
+                  </ion-content>
+                </ng-template>
+              </ion-popover>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card-header>
+                <ion-card-title> 
+                  {{vaga.ocultarNome === 'S' ? 'Empresa Confidencial' : vaga.idEmpresa?.nomeEmpresa}}
+                </ion-card-title>
+              </ion-card-header>
+              <div>
+                <div class="centralize-content">
+                  <!-- Logo normal -->
+                  <img *ngIf="vaga.ocultarNome !== 'S' && vaga.logo !== 'vaga-logopadrao.svg'" alt="Logo" class="logo" 
+                       [src]="isEnvironment ? 'http://vagas.pep2.ifsp.edu.br/api/images/'+vaga.logo : 
+                                             'https://backend-pepvagas-4.onrender.com/images/'+vaga.logo"/> <!-- Estava assim: vaga.logo === 'vaga-logopadrao.svg -->
+                  
+                  <!-- Logo confidencial -->
+                  <img *ngIf="vaga.ocultarNome === 'S' || vaga.logo === 'vaga-logopadrao.svg'" alt="Logo Confidencial" class="logo" 
+                       src="assets/confidencial.png"/>
+                </div>
+                <div class="centralize-content">
+                  <a *ngIf="temSite && vaga.ocultarNome !== 'S'" [href]="linkSite" target="_blank" class="nome">
+                    <b>{{vaga.idEmpresa?.site}}</b>
+                  </a>
+                </div>
+                <br>
+                <div class="centralize-content">
+                  <div class="nome">{{vaga.cidade}}</div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <div class="job-description">
+                <ion-label class="breakable">{{vaga.descricao}}</ion-label>
+              </div>
+              <br>
+              <div class="nome">Disponível até: {{dataExpira}}</div>
+            </ion-col>
+            <ion-col size="12" class="curriculo-enviar">
+              <ion-radio-group *ngIf="isCandidato && !fromCandidaturas" [(ngModel)]="selectedOption" class="radio-group-inline">
+                <ion-item class="radinhos">
+                  <ion-radio value="perfil"></ion-radio>
+                  <ion-label >Usar Currículo do Perfil</ion-label>
+                </ion-item>
+                <ion-item class="radinhos">
+                  <ion-radio value="novo"></ion-radio>
+                  <ion-label>Adicionar Novo Currículo</ion-label>
+                </ion-item>
+              </ion-radio-group>
+              <ion-button 
+                *ngIf="isCandidato && !fromCandidaturas" 
+                class="curriculo" 
+                expand="block" 
+                (click)="fileInput.click()"
+                [disabled]="selectedOption === 'perfil'">
+                {{ selectedFile ? 'Currículo selecionado: ' + selectedFile.name : 'Selecionar currículo' }}
+              </ion-button>
+              <input style="display: none;" type="file" accept=".pdf" #fileInput (change)="onFileSelected($event)">
+            </ion-col>
+
+            <ion-col size="12" class="apply-button-container">
+              <ion-button *ngIf="isCandidato && !fromCandidaturas" mat-button shape="round" (click)="candidatar()" color="dark">Quero me
+                candidatar!</ion-button>
+            </ion-col>
+            <ion-col size="12" *ngIf="!isLogged" class="login-message">
+              Para se candidatar faça login ou se cadastre!
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

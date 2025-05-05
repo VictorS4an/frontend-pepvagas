@@ -1,0 +1,120 @@
+.web-padding {
+  width: 100%;
+  height: 100%;
+  padding: 0 15%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+}
+
+.header {
+  --background: var(--ion-color-pep);
+  color: white;
+}
+
+ion-searchbar.custom {
+  --background: var(--ion-card-background);
+  --border-radius: 10px;
+  --padding-inline-start: 0px;
+  margin-top: 40px;
+}
+
+ion-img {
+  max-width: 150px;
+}
+
+ion-list {
+  background-color: var(--ion-background-color);
+}
+
+ion-item {
+  --background: var(--ion-background-color);
+}
+
+// ion-label{
+//   cursor: pointer;
+//   padding: 10px;
+// }
+
+ion-label:hover {
+  background-color: var(--ion-card-background);
+}
+
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.popover {
+  --background: var(--ion-card-background);
+}
+
+ion-button {
+  --background: var(--ion-color-pep);
+  --box-shadow: none;
+}
+
+ion-header {
+  box-shadow: none;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .web-padding {
+    padding: 0;
+  }
+
+
+  .subtitle {
+    font-size: 18px;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border-radius: 20px;
+  background: rgba(var(--ion-color-pep-rgb), 0.1);
+  
+  .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ion-color-pep);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    letter-spacing: 0.3px;
+  }
+}
+
+/* Efeito hover para melhor interação */
+.user-info:hover {
+  background: rgba(var(--ion-color-pep-rgb), 0.15);
+}
+
+/* Ajuste para tema escuro */
+@media (prefers-color-scheme: dark) {
+  .user-info {
+    background: rgba(var(--ion-color-pep-rgb), 0.2);
+    
+    .user-name {
+      color: var(--ion-color-pep-shade);
+    }
+  }
+  
+  .user-info:hover {
+    background: rgba(var(--ion-color-pep-rgb), 0.25);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .user-info .user-name {
+    color: var(--ion-color-pep-shade); /* Ou uma cor personalizada com mais contraste */
+  }
+}

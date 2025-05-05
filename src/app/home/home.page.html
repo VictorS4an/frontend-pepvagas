@@ -1,0 +1,46 @@
+<ion-content [fullscreen]="true">
+  <app-nav></app-nav>
+
+  <ion-toast class="aviso" icon="person" [buttons]="toastButtons" [isOpen]="isToastOpen" message="Registre suas informações complementares para receber vagas que combinam com você!"></ion-toast>
+
+  <div class="web-padding">
+    
+
+    <ion-searchbar [debounce]="500" (ionInput)="search()" [(ngModel)]="searchValue" placeholder="Título da vaga" show-clear-button="focus" class="custom"></ion-searchbar>
+
+    <ion-button [routerLink]="['/tela-profissionais-liberais']"> Pesquisar Profissionais Liberais/Autônomos</ion-button>
+
+    <div class="header-with-button">
+      <h4 class="subtitle">Vagas publicadas</h4>
+      <ion-button id="home">?</ion-button>
+    </div>
+
+    <ion-popover trigger="home" triggerAction="click">
+      <ng-template>
+        <ion-content class="ion-padding"> As vagas são listadas em ordem de preferência, as que mais atendem aos interesses do candidato aparecem primeiro. </ion-content>
+      </ng-template>
+    </ion-popover>
+
+    <div *ngIf="this.listaVagas.length > 0" class="vagas-grid">
+      <div class="vaga-wrapper" *ngFor="let vaga of listaVagas" [routerLink]="['/vaga-detalhes']" (click)="verVagaDetalhes(vaga)" [ngClass]="{ 'vaga-desabilitada': vaga.jaCandidatado }">        <app-vaga 
+          [titulo]="vaga.titulo" 
+          [cidade]="vaga.cidade" 
+          [regime]="vaga.regime" 
+          [salario]="vaga.salario"
+          [pcd]="vaga.pcd" 
+          [tipo]="vaga.tipo" 
+          [data]="vaga.dataLimite" 
+          [logo]="vaga.logo"
+          [empresa]="vaga.idEmpresa.nomeEmpresa"
+          [ocultarNome]="vaga.ocultarNome">  
+        </app-vaga>
+        <div *ngIf="vaga.jaCandidatado" class="badge-candidatado">
+          Já candidatado
+        </div>
+      </div>
+    </div>
+    <div *ngIf="this.listaVagas.length === 0">
+      <p class="subtitle center">Não há nenhuma vaga publicada.</p>
+    </div>
+  </div>
+</ion-content>
