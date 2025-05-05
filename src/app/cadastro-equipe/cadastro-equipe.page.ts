@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
-import { TipoUsuario } from '../../../../shared/enums/TipoUsuario'
 import { MembroService } from '../services/membro.service'
 import { AdministradorService } from '../services/administrador.service';
 import { CandidatoService } from '../services/candidato.service';
@@ -69,7 +68,7 @@ export class CadastroEquipePage implements OnInit {
       this.exibirMensagem("As senhas não coincidem.")
     }else{
       try {
-        const response = await this.authService.createAccount(this.novaConta.email, this.novaConta.senha, TipoUsuario.MEMBRO_EQUIPE)
+        const response = await this.authService.createAccount(this.novaConta.email, this.novaConta.senha, "M")
 
         if(response.status == 201){
           const response2 = await this.equipeService.cadastrarMembroEquipe(response.data.idConta, this.novaEquipe.nome)

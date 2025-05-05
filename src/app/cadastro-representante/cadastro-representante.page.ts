@@ -5,7 +5,6 @@ import { RepresentanteService } from '../services/representante.service';
 import { AuthService } from '../services/auth.service';
 import { CandidatoService } from '../services/candidato.service';
 import { AdministradorService } from '../services/administrador.service';
-import { TipoUsuario } from '../../../../shared/enums/TipoUsuario';
 
 @Component({
   selector: 'app-cadastro-representante',
@@ -67,7 +66,7 @@ export class CadastroRepresentantePage implements OnInit {
       this.exibirMensagem("As senhas não coincidem.")
     }else{
       try {
-        const response = await this.authService.createAccount(this.novaConta.email, this.novaConta.senha, TipoUsuario.REPRESENTANTE)
+        const response = await this.authService.createAccount(this.novaConta.email, this.novaConta.senha, "R")
 
         if(response.status == 201){
           const response2 = await this.representanteService.cadastrarRepresentante(response.data.idConta, this.novoRepresentante.nome, this.novoRepresentante.empresa)
