@@ -83,7 +83,7 @@ export class ListarContasPage implements OnInit {
       const contaSelecionada = this.listaConta.find(c => c.idConta === this.selectedIdConta);
 
       try {
-        const respostaConta = await this.contaServico.deleteAccount(idString);
+        await this.contaServico.deleteAccount(idString);
 
         switch (contaSelecionada.tipo) {
           case 'E':

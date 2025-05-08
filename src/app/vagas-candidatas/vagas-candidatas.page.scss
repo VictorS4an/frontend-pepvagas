@@ -100,9 +100,13 @@ ion-header{
 
 .vaga-wrapper {
   height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 app-vaga {
-  height: 100%;
+  flex: 1;
   display: flex;
+  flex-direction: column;
 }

@@ -22,7 +22,8 @@
     </ion-popover>
 
     <div *ngIf="this.listaVagas.length > 0" class="vagas-grid">
-      <div class="vaga-wrapper" *ngFor="let vaga of listaVagas" [routerLink]="['/vaga-detalhes']" (click)="verVagaDetalhes(vaga)" [ngClass]="{ 'vaga-desabilitada': vaga.jaCandidatado }">        <app-vaga 
+      <div class="vaga-wrapper" *ngFor="let vaga of listaVagas" [routerLink]="['/vaga-detalhes']" (click)="verVagaDetalhes(vaga)" [ngClass]="{ 'vaga-desabilitada': vaga.jaCandidatado }">
+        <app-vaga 
           [titulo]="vaga.titulo" 
           [cidade]="vaga.cidade" 
           [regime]="vaga.regime" 
@@ -40,7 +41,7 @@
       </div>
     </div>
     <div *ngIf="this.listaVagas.length === 0">
-      <p class="subtitle center">Não há nenhuma vaga publicada.</p>
+      <p class="subtitle center">Não há nenhuma vaga publicada no momento.</p>
     </div>
   </div>
 </ion-content>
