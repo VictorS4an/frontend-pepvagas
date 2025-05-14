@@ -41,9 +41,9 @@ export class CriarContaPage implements OnInit {
       this.showMessage("Por favor, insira um e-mail válido (exemplo: usuario@dominio.com).");
       return;
     }
-  
-    if (this.login.email == '') {
-      this.showMessage("O Email é requerido.");
+    
+    if (!this.login.email || !this.login.senha) {
+      this.showMessage("O Email e a Senha são requeridos.");
     } else if (this.login.senha != this.login.confirmacaoSenha) {
       this.showMessage("As senhas não coincidem.");
     } else {

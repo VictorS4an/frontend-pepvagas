@@ -274,7 +274,7 @@ export class EditarVagaPage implements OnInit {
       this.showMessage("Por favor, preencha o campo Nível de instrução.");
       return true;
     }
-    if (this.vaga.emailCurriculo == null) {
+    if (this.vaga.emailCurriculo == null || this.vaga.emailCurriculo.trim() == "") {
       this.showMessage("Por favor, preencha o campo Email de currículos.");
       return true;
     }

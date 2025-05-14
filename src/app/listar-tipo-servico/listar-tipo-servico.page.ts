@@ -116,6 +116,7 @@ export class ListarTipoServicoPage implements OnInit {
           position: 'bottom'
         });
         toast.present();
+        this.selectedIdTipo = null;
       }
     }
   }
@@ -170,7 +171,7 @@ export class ListarTipoServicoPage implements OnInit {
 
   async confirmarExclusao() {
     if (this.selectedIdTipo == null) {
-      this.exibirMensagem("Selecione um representante")
+      this.exibirMensagem("Selecione um tipo de serviço.")
       return;
     }
 

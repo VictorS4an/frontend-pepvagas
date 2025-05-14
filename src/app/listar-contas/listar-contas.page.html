@@ -5,7 +5,7 @@
     <div class="container">
       <ion-card>
         <ion-card-header>
-          <h1 class="title"> Listar Contas </h1>
+          <h1 class="title">Listar Contas</h1>
         </ion-card-header>
 
         <ion-card-content>
@@ -15,6 +15,7 @@
                 <table>
                   <thead>
                     <tr>
+                      <th>Nome</th>
                       <th>Email</th>
                       <th>Tipo</th>
                     </tr>
@@ -22,8 +23,9 @@
                   <tbody>
                     <tr *ngFor="let conta of paginatedListaConta" (click)="onRowClick(conta.idConta)"
                       [class.selected]="conta.idConta === selectedIdConta">
+                      <td>{{ conta.nome || 'Sem Nome' }}</td>
                       <td>{{ conta.email }}</td>
-                      <td>{{ conta.tipo }}</td>
+                      <td>{{ getTipoLabel(conta.tipo) }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -50,5 +52,4 @@
       </ion-row>
     </div>
   </div>
-
 </ion-content>

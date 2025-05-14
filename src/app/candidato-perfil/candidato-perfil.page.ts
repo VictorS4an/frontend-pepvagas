@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { CandidatoService } from '../services/candidato.service';
 import { AreaService } from '../services/area.service';
 import { CidadeService } from '../services/cidade.service';
-import {maskitoNumberOptionsGenerator} from '@maskito/kit';
+import { maskitoNumberOptionsGenerator } from '@maskito/kit';
 
 interface Area {
   idArea: number;
@@ -29,24 +29,24 @@ export class CandidatoPerfilPage implements OnInit {
   public senhaAtual = ''
   public novaSenha = ''
   public confirmarNovaSenha = ''
-  public opcoes : any = []
+  public opcoes: any = []
   public user: any = {}
   public userType: string = ''
   public isLogged: boolean = false
   public listaCidades: any = []
   public cidadesFiltro: any = []
   public cidadesSelecionadas: string[] = []
-  public cidadesSelecionadasText:any
+  public cidadesSelecionadasText: any
   public cidadeProcurada: any = ''
 
   readonly maskPredicate: MaskitoElementPredicate = async (el) => (el as HTMLIonInputElement).getInputElement()
 
   readonly phoneMask: MaskitoOptions = {
-    mask: ['(', /\d/, /\d/,')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/,  '-', /\d/, /\d/, /\d/, /\d/],
+    mask: ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
   };
 
   readonly cpfMask: MaskitoOptions = {
-    mask: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/,/\d/, '-', /\d/, /\d/]
+    mask: [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/]
   }
 
   readonly moneyMask = maskitoNumberOptionsGenerator({
@@ -58,9 +58,9 @@ export class CandidatoPerfilPage implements OnInit {
     prefix: 'R$',
   });
 
-  constructor(private authService: AuthService, 
-    private navigationController: NavController, 
-    private candidatoService: CandidatoService, 
+  constructor(private authService: AuthService,
+    private navigationController: NavController,
+    private candidatoService: CandidatoService,
     private toastController: ToastController,
     private areaService: AreaService,
     private cidadeService: CidadeService,
@@ -68,11 +68,11 @@ export class CandidatoPerfilPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    if(this.authService.getJwt() == null)
+    if (this.authService.getJwt() == null)
       this.navigationController.navigateRoot('login')
 
     this.getUser()
-    
+
     try {
       this.conta = await this.authService.getContaDetails()
     } catch (error) {
@@ -89,7 +89,7 @@ export class CandidatoPerfilPage implements OnInit {
       if (this.candidato.pretensaoSalarial != null) {
         this.candidato.pretensaoSalarial = this.converterParaMoeda(this.candidato.pretensaoSalarial)
       }
-      if(this.candidato.cidade != null){
+      if (this.candidato.cidade != null) {
         this.cidadesSelecionadas = this.convertStringToArray(this.candidato.cidade)
         this.cidadesSelecionadasText = this.candidato.cidade
       }
@@ -131,14 +131,14 @@ export class CandidatoPerfilPage implements OnInit {
 
     this.candidatoAlteradoAreas = [...this.opcoes];
     this.candidatoAlteradoAreas = this.candidatoAlteradoAreas.filter((area: Area) => {
-    return this.candidatoAreas.some((candidatoArea: Area) => candidatoArea.idArea === area.idArea);
+      return this.candidatoAreas.some((candidatoArea: Area) => candidatoArea.idArea === area.idArea);
     });
-  
+
     if (this.candidatoAlterado.cidade != null) {
       this.candidatoAlterado.cidade = this.convertStringToArray(this.candidatoAlterado.cidade);
     }
 
-    if(this.candidato.cidade != null){
+    if (this.candidato.cidade != null) {
       this.cidadesSelecionadas = this.convertStringToArray(this.candidato.cidade)
       this.cidadesSelecionadasText = this.candidato.cidade
     }
@@ -178,7 +178,7 @@ export class CandidatoPerfilPage implements OnInit {
     const file = event.target.files[0]
 
     if (file != null) {
-    this.verifyFileSize(file) ? this.exibirMensagem("Tamanho do arquivo deve ser de até 8MB") : this.selectedFile = file
+      this.verifyFileSize(file) ? this.exibirMensagem("Tamanho do arquivo deve ser de até 8MB") : this.selectedFile = file
     }
   }
 
@@ -203,7 +203,7 @@ export class CandidatoPerfilPage implements OnInit {
     this.navigationController.navigateForward(ref)
   }
 
-  logout(){
+  logout() {
     this.authService.logout()
     this.navigationController.navigateForward('login')
   }
@@ -233,11 +233,11 @@ export class CandidatoPerfilPage implements OnInit {
 
   pcdForString(pcd: boolean): string {
     if (pcd) {
-        return '1'
+      return '1'
     } else {
-        return '0'
+      return '0'
     }
-}
+  }
 
   formatCpf(cpf: string): string {
     if (cpf && cpf.length === 11) {
@@ -250,22 +250,22 @@ export class CandidatoPerfilPage implements OnInit {
   formatTelefone(telefone: string): string {
     if (telefone && telefone.length === 11) {
       return telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
-    }  else {
+    } else {
       return telefone;
     }
   }
 
   async deactivateAccount(id: string): Promise<void> {
-    
+
     try {
       const responseCandidato = await this.candidatoService.desativarCandidato(id);
-  
+
       const mensagem = responseCandidato?.message || responseCandidato?.data?.message;
-  
+
       if (mensagem) {
         if (mensagem === "Candidato desativado com sucesso.") {
           const responseConta = await this.authService.deleteAccount(id);
-  
+
           if (responseConta?.data?.message) {
             await this.exibirMensagem("Conta desativada com sucesso!");
             this.logout();
@@ -285,7 +285,7 @@ export class CandidatoPerfilPage implements OnInit {
       console.error('Erro ao desativar o candidato:', error);
       this.exibirMensagem('Ocorreu um erro ao tentar desativar o candidato. Tente novamente.');
     }
-  }  
+  }
 
   async exibirMensagem(mensagem: string) {
     const toast = await this.toastController.create({
@@ -304,29 +304,29 @@ export class CandidatoPerfilPage implements OnInit {
     const idadeEmMilissegundos = dataAtual.getTime() - dataNascimento.getTime();
     const idadeEmAnos = idadeEmMilissegundos / (1000 * 60 * 60 * 24 * 365);
 
-    if(this.candidatoAlterado.nome == ''){
+    if (this.candidatoAlterado.nome == '') {
       this.exibirMensagem("O seu nome não pode estar vazio.")
     }
-     else if(this.candidatoAlterado.cpf != this.candidato.cpf){
-       this.exibirMensagem("Você não pode mudar de CPF")
-     }
-     else if(dataNascimento == null || this.candidatoAlterado.dataNascimento == ''){
+    else if (this.candidatoAlterado.cpf != this.candidato.cpf) {
+      this.exibirMensagem("Você não pode mudar de CPF")
+    }
+    else if (dataNascimento == null || this.candidatoAlterado.dataNascimento == '') {
       this.exibirMensagem("Insira uma Data de Nascimento")
     }
-     else if(dataNascimento.getTime() > dataAtual.getTime()){
-       this.exibirMensagem("Data inválida")
-     }
-     else if (idadeEmAnos < 16) {
+    else if (dataNascimento.getTime() > dataAtual.getTime()) {
+      this.exibirMensagem("Data inválida")
+    }
+    else if (idadeEmAnos < 16) {
       this.exibirMensagem("Você deve ter pelo menos 16 anos.");
-     }
-     else if(this.candidatoAlterado.telefone !== null && this.candidatoAlterado.telefone.length < 15){
-       this.exibirMensagem("Complete o número de telefone")
-     }
-    else{
+    }
+    else if (this.candidatoAlterado.telefone !== null && this.candidatoAlterado.telefone.length < 15) {
+      this.exibirMensagem("Complete o número de telefone")
+    }
+    else {
       try {
 
         let pretensaoSalarial: any
-        if(this.candidatoAlterado.pretensaoSalarial != null){
+        if (this.candidatoAlterado.pretensaoSalarial != null) {
           pretensaoSalarial = this.converterParaNumero(this.candidatoAlterado.pretensaoSalarial);
         }
 
@@ -346,20 +346,20 @@ export class CandidatoPerfilPage implements OnInit {
           pretensaoSalarial,
           this.candidatoAlterado.telefone
         );
-    
+
         if (response.status === 200) {
           const resposta = this.atualizarAreasDeInteresseCandidato(this.conta.idConta, this.candidatoAlteradoAreas)
           this.candidatoAlteradoAreas = [...this.opcoes];
           this.candidatoAlteradoAreas = this.candidatoAlteradoAreas.filter((area: Area) => {
-          return this.candidatoAreas.some((candidatoArea: Area) => candidatoArea.idArea === area.idArea);
+            return this.candidatoAreas.some((candidatoArea: Area) => candidatoArea.idArea === area.idArea);
           });
 
-          if ((await resposta).status === 200){
+          if ((await resposta).status === 200) {
             this.modal.dismiss(this.candidato.nome, 'confirm');
             this.ngOnInit()
             this.exibirMensagem("Informações alteradas com sucesso!")
           }
-          
+
         } else {
           console.error('Erro ao alterar candidato:', response.data);
           this.exibirMensagem('Erro ao alterar candidato. Por favor, tente novamente.');
@@ -368,16 +368,16 @@ export class CandidatoPerfilPage implements OnInit {
         console.error('Erro ao alterar candidato:', error);
       }
 
-      try{
-        if(this.selectedFile !== null){
+      try {
+        if (this.selectedFile !== null) {
           const resposta = await this.candidatoService.uploadFile(this.conta.idConta, this.selectedFile)
         }
 
-      }catch(error){
+      } catch (error) {
         console.log("erro" + error)
       }
     }
-    
+
   }
 
   async removerCurriculo() {
@@ -404,10 +404,10 @@ export class CandidatoPerfilPage implements OnInit {
       if (this.novaSenha.length < 4) {
         this.exibirMensagem("Nova senha deve ter no mínimo 4 caracteres")
       }
-      else if(this.novaSenha != this.confirmarNovaSenha){
+      else if (this.novaSenha != this.confirmarNovaSenha) {
         this.exibirMensagem("A nova senha e sua confirmação não coincidem")
       }
-      else{
+      else {
         const response = await this.authService.updatePassword(this.conta.idConta, this.senhaAtual, this.novaSenha, this.confirmarNovaSenha);
         if (response.status === 200) {
           this.exibirMensagem("Senha atualizada com sucesso!");
@@ -537,7 +537,7 @@ export class CandidatoPerfilPage implements OnInit {
           },
         ],
       });
-  
+
       await alert.present();
     }
   }
@@ -547,7 +547,7 @@ export class CandidatoPerfilPage implements OnInit {
     return cidades.split(',').map(cidade => cidade.trim());
   }
 
-  converterParaNumero(valorString: any){
+  converterParaNumero(valorString: any) {
     if (valorString == 'R$') {
       return null
     }
@@ -558,101 +558,123 @@ export class CandidatoPerfilPage implements OnInit {
     const valorNumerico = parseFloat(valorNumericoString.replace(',', '.'));
 
     if (isNaN(valorNumerico)) {
-        throw new Error(`Valor "${valorString}" não pôde ser convertido para número.`);
+      throw new Error(`Valor "${valorString}" não pôde ser convertido para número.`);
     }
 
     return valorNumerico;
   }
 
-converterParaMoeda(valorNumerico: any){
-  if (isNaN(valorNumerico)) {
+  converterParaMoeda(valorNumerico: any) {
+    if (isNaN(valorNumerico)) {
       throw new Error(`Valor numerico não pôde ser convertido para um número`);
-  }
-
-  const valorFormatado = valorNumerico.toFixed(2);
-  const partes = valorFormatado.split('.');
-
-  let parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-  let resultado = `R$ ${parteInteira},${partes[1]}`;
-
-  return resultado;
-}
-
-dismissCidadesPopover(){
-  this.cidadesSelecionadasText = this.cidadesSelecionadas.toString()
-  this.isCidadesPopoverOpen = false
-}
-
-public handleCidadesFiltro(e: any){
-  const query = e.target.value.toLowerCase();
-
-  if (query == '') {
-    this.cidadesFiltro = [...this.listaCidades]
-    return this.cidadesFiltro
-  }
-
-  this.cidadesFiltro = this.cidadesFiltro.filter((cidade: any) => {
-    if (cidade.toLowerCase().indexOf(query) > -1) {
-      return cidade
-    }
-  })
-}
-
-public checkboxChange(e: any){
-  const details = e.detail ?? null
-
-  if(details){
-    
-    if(details.checked){
-      this.addOnCidades(details.value)
-    }else{
-      this.removeCidade(details.value)
     }
 
-  }
-}
+    const valorFormatado = valorNumerico.toFixed(2);
+    const partes = valorFormatado.split('.');
 
-public mostrarCidades(e: Event){
-  this.cidadesPopover.event = e
-  this.isCidadesPopoverOpen = true
-}
+    let parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-public addOnCidades(cidade: string){
+    let resultado = `R$ ${parteInteira},${partes[1]}`;
 
-  const index = this.cidadesSelecionadas.indexOf(cidade)
-  if(index <= -1){
-    this.cidadesSelecionadas.push(cidade)
+    return resultado;
   }
 
-  if(this.cidadesSelecionadas[0] == ''){
-    this.cidadesSelecionadas.slice(0,1)
+  dismissCidadesPopover() {
+    this.cidadesSelecionadasText = this.cidadesSelecionadas.toString()
+    this.isCidadesPopoverOpen = false
   }
 
-}
+  public handleCidadesFiltro(e: any) {
+    const query = e.target.value.toLowerCase();
 
-public removeCidade(cidade: string){
-  const index = this.cidadesSelecionadas.indexOf(cidade)
-  if (index > -1){
-    this.cidadesSelecionadas.splice(index, 1)
+    if (query == '') {
+      this.cidadesFiltro = [...this.listaCidades]
+      return this.cidadesFiltro
+    }
+
+    this.cidadesFiltro = this.cidadesFiltro.filter((cidade: any) => {
+      if (cidade.toLowerCase().indexOf(query) > -1) {
+        return cidade
+      }
+    })
   }
 
-}
+  public checkboxChange(e: any) {
+    const details = e.detail ?? null
 
-async carregarCidades() {
-  this.cidadeService.getCidades().subscribe((data: any[]) => {
-    this.listaCidades = data.map((cidade: any) => cidade.nome);
-    this.cidadesFiltro = [...this.listaCidades]
-  });
-}
+    if (details) {
 
-public verifyFileSize(file: any) {
-  const size = 8 * 1024 * 1024
+      if (details.checked) {
+        this.addOnCidades(details.value)
+      } else {
+        this.removeCidade(details.value)
+      }
 
-  if (file.size > size) {
-    return true
+    }
   }
-  return false
-}
+
+  public mostrarCidades(e: Event) {
+    this.cidadesPopover.event = e
+    this.isCidadesPopoverOpen = true
+  }
+
+  public addOnCidades(cidade: string) {
+
+    const index = this.cidadesSelecionadas.indexOf(cidade)
+    if (index <= -1) {
+      this.cidadesSelecionadas.push(cidade)
+    }
+
+    if (this.cidadesSelecionadas[0] == '') {
+      this.cidadesSelecionadas.slice(0, 1)
+    }
+
+  }
+
+  public removeCidade(cidade: string) {
+    const index = this.cidadesSelecionadas.indexOf(cidade)
+    if (index > -1) {
+      this.cidadesSelecionadas.splice(index, 1)
+    }
+
+  }
+
+  async carregarCidades() {
+    this.cidadeService.getCidades().subscribe((data: any[]) => {
+      this.listaCidades = data.map((cidade: any) => cidade.nome);
+      this.cidadesFiltro = [...this.listaCidades]
+    });
+  }
+
+  public verifyFileSize(file: any) {
+    const size = 8 * 1024 * 1024
+
+    if (file.size > size) {
+      return true
+    }
+    return false
+  }
+
+  async confirmarRemocaoCurriculo() {
+
+    const alert = await this.alertController.create({
+      header: 'Confirmação',
+      message: 'Tem certeza de que deseja remover seu currículo da plataforma?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Remover',
+          handler: () => {
+            this.removerCurriculo();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 
 }

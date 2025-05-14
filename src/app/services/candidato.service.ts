@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 
@@ -24,7 +24,7 @@ export class CandidatoService {
     const api = axios.create({
       baseURL: this.urlBase
     });
-  
+
     try {
       const response = await api.get(`/candidato/cpf/${cpf}`);
       return {
@@ -43,7 +43,7 @@ export class CandidatoService {
       }
     }
   }
-  
+
 
   // CADASTRA UM NOVO CANDIDATO COM TODOS OS DADOS PESSOAIS E PROFISSIONAIS
   async cadastroCandidato(id: string, nome: string, nomeSocial: string, genero: string, cpf: string, dataNascimento: any, pcd: number, disponibilidade: string, cidadeInteresse: string, vagaInteresse: string, nivelInstrucao: string, cnh: string, pretensaoSalarial: number, telefone: string) {
@@ -120,7 +120,7 @@ export class CandidatoService {
   async deleteFile(id: string | null): Promise<any> {
     const api = axios.create(
       {
-        baseURL : this.urlBase
+        baseURL: this.urlBase
       }
     )
 
@@ -132,7 +132,7 @@ export class CandidatoService {
       if (error.response && error.response.data && error.response.data.message) {
         return { erro: true, message: error.response.data.message };
       }
-  
+
       // Caso genérico
       return { erro: true, message: 'Erro desconhecido ao remover currículo.' };
     }
@@ -144,13 +144,13 @@ export class CandidatoService {
       baseURL: this.urlBase,
       responseType: 'blob'
     });
-  
+
     try {
       const response = await api.get('/candidato/cv/get/' + id);
       return response;
     } catch (error: any) {
       console.error('Erro ao obter currículo:', error);
-  
+
       // Trata erro que veio como blob
       if (error.response && error.response.data) {
         try {
@@ -161,20 +161,33 @@ export class CandidatoService {
           return { erro: true, message: 'Erro ao processar resposta do servidor.' };
         }
       }
-  
+
       return { erro: true, message: 'Erro desconhecido ao obter currículo.' };
     }
   }
 
   // BUSCA OS DADOS DE UM CANDIDATO PELO ID
   async getCandidato(id: string) {
-    const api = axios.create({
-      baseURL: this.urlBase
-    })
+    const jwt = this.authService.getJwt();
 
-    const response = await api.get(this.urlBase + '/candidato/' + id)
+    try {
+      const response = await this.api.get(this.urlBase + '/candidato/' + id, {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      });
 
-    return response.data
+      return response.data;
+    } catch (err) {
+      const error = err as AxiosError;
+
+      if (error.response?.status === 401) {
+        this.authService.logout();
+      }
+
+      console.error("Erro ao buscar candidato:", error);
+      return null;
+    }
   }
 
   // LISTA TODAS AS CANDIDATURAS DE UM CANDIDATO
@@ -276,7 +289,7 @@ export class CandidatoService {
     const api = axios.create({
       baseURL: this.urlBase
     });
-  
+
     try {
       // Usar o endpoint que já retorna as áreas junto com os dados do candidato
       const response = await api.get('/candidato/' + idconta);
@@ -306,7 +319,7 @@ export class CandidatoService {
   }
 
   async desativarCandidato(id: string) {
-    
+
     try {
       const jwt = this.authService.getJwt();
 

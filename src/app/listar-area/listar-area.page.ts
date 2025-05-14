@@ -61,7 +61,15 @@ export class ListarAreaPage implements OnInit {
 
   async validateAndOpenModal() {
     if (this.selectedIdArea !== null) {
-      this.modal.present();
+      const areaSelecionada = this.listaArea.find((a: any) => a.idArea === this.selectedIdArea);
+      
+      if (areaSelecionada) {
+        // Preenche o formulário com o nome da Área selecionada
+        this.area.patchValue({
+          nome: areaSelecionada.nome
+        });
+        this.modal.present();
+      }
     } else {
       const toast = await this.toastController.create({
         message: 'Selecione uma área para poder alterar.',
@@ -109,6 +117,7 @@ export class ListarAreaPage implements OnInit {
           cssClass: 'custom-dark-toast'
         });
         toast.present();
+        this.selectedIdArea = null;
   
       } catch (error) {
         console.error('Erro ao excluir área:', error);
